@@ -9,9 +9,9 @@ import cn.techoc.jxcadmin.exceptions.ParamsException;
 public class AssertUtil {
 
 
-    public  static void isTrue(Boolean flag,String msg){
-        if(flag){
-            throw  new ParamsException(msg);
+    public static void isTrue(Boolean flag, String msg) {
+        if (flag) {
+            throw new ParamsException(msg);
         }
     }
 

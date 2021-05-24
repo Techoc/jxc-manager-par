@@ -1,0 +1,45 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jxc
+    username: root
+    password: 123456
+    hikari:
+      pool-name: DateHikariCP
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 180000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  freemarker:
+    suffix: .ftl
+    content-type: text/html
+    charset: UTF-8
+    template-loader-path: classpath:/views/
+    request-context-attribute: ctx
+    settings:
+      number_format: 0.##
+
+# MyBatis-plus配置
+mybatis-plus:
+  # 配置Mapper映射文件
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  #配置MyBatis数据返回类型别名（默认别名是类名）
+  type-aliases-package: cn.techoc.jxcadmin.pojo
+  configuration:
+    # 自动驼峰命名
+    map-underscore-to-camel-case: true
+
+# SQL 打印(方法接口所在的包，不是Mapper.xml所在的包)
+logging:
+  level:
+    cn.techoc.jxcadmin.mapper: debug
+  pattern:
+    console: '%d{2100-01-01 13:14:00.666} [%thread] %-5level %logger{50} - %msg%n'

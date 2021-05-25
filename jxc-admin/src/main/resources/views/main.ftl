@@ -29,7 +29,7 @@
                                    data-title="基本资料" data-icon="fa fa-gears">基本资料</a>
                             </dd>
                             <dd>
-                                <a href="javascript:;" data-iframe-tab="${ctx.contextPath}/user/toPasswordPage"
+                                <a href="javascript:;" data-iframe-tab="${ctx.contextPath}/user/password"
                                    data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
                             </dd>
                             <dd>
@@ -273,8 +273,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
         </div>

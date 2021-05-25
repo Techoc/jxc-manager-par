@@ -90,7 +90,7 @@
     </div>
 </div>
 <div class="footer">
-    上海乐字节教育科技有限公司 ICP认证：沪ICP备19046588号<span class="padding-5">|</span>Copyright@2019乐字节 All Rights Reserved
+    <#--上海乐字节教育科技有限公司 ICP认证：沪ICP备19046588号<span class="padding-5">|</span>Copyright@2019乐字节 All Rights Reserved-->
 </div>
 
 <script src="${ctx.contextPath}/js/index.js" charset="utf-8"></script>

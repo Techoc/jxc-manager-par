@@ -29,4 +29,22 @@ public interface IUserService extends IService<User> {
      * @return
      */
     User findUserByUserName(String username);
+
+    /**
+     * 更新用户信息
+     *
+     * @param user
+     */
+    void updateUserInfo(User user);
+
+    /**
+     * 根据用户名更新密码
+     *
+     * @param userName
+     * @param oldPassword
+     * @param newPassword
+     * @param confirmPassword
+     */
+    void updateUserPassword(String userName, String oldPassword, String newPassword,
+                            String confirmPassword);
 }

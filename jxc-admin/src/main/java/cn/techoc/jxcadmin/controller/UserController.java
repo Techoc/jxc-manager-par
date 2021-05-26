@@ -26,6 +26,14 @@ public class UserController {
     @Resource
     private IUserService userService;
 
+    /**
+     * 用户登录
+     *
+     * @param username
+     * @param password
+     * @param session
+     * @return
+     */
     @RequestMapping("login")
     @ResponseBody
     public RespBean login(String username, String password, HttpSession session) {
@@ -85,6 +93,15 @@ public class UserController {
         return "user/password";
     }
 
+    /**
+     * 用户密码更新
+     *
+     * @param session
+     * @param oldPassword
+     * @param newPassword
+     * @param confirmPassword
+     * @return
+     */
     @RequestMapping("updateUserPassword")
     @ResponseBody
     public RespBean updateUserPassword(HttpSession session, String oldPassword, String newPassword,
@@ -102,4 +119,5 @@ public class UserController {
             return RespBean.error("用户密码更新失败!");
         }
     }
+
 }

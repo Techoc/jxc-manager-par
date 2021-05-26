@@ -5,8 +5,10 @@ import cn.techoc.jxcadmin.exceptions.ParamsException;
 import cn.techoc.jxcadmin.model.RespBean;
 import cn.techoc.jxcadmin.pojo.User;
 import cn.techoc.jxcadmin.service.IUserService;
+import java.security.Principal;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -27,30 +29,14 @@ public class UserController {
     private IUserService userService;
 
     /**
-     * 用户登录
-     *
-     * @param username
-     * @param password
-     * @param session
-     * @return
-     */
-    @RequestMapping("login")
-    @ResponseBody
-    public RespBean login(String username, String password, HttpSession session) {
-        User user = userService.login(username, password);
-        session.setAttribute("user", user);
-        return RespBean.success("用户登录成功!");
-    }
-
-    /**
      * 用户信息设置页面
      *
      * @return
      */
     @RequestMapping("setting")
-    public String setting(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        session.setAttribute("user", userService.getById(user.getId()));
+    public String setting(Principal principal, Model model) {
+        User user = userService.findUserByUserName(principal.getName());
+        model.addAttribute("user", user);
         return "user/setting";
     }
 
@@ -88,7 +74,7 @@ public class UserController {
     /**
      * 用户密码更新
      *
-     * @param session
+     * @param principal
      * @param oldPassword
      * @param newPassword
      * @param confirmPassword
@@ -96,20 +82,11 @@ public class UserController {
      */
     @RequestMapping("updateUserPassword")
     @ResponseBody
-    public RespBean updateUserPassword(HttpSession session, String oldPassword, String newPassword,
+    public RespBean updateUserPassword(Principal principal, String oldPassword, String newPassword,
                                        String confirmPassword) {
-        try {
-            User user = (User) session.getAttribute("user");
-            userService
-                .updateUserPassword(user.getUserName(), oldPassword, newPassword, confirmPassword);
-            return RespBean.success("用户密码更新成功");
-        } catch (ParamsException e) {
-            e.printStackTrace();
-            return RespBean.error(e.getMsg());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RespBean.error("用户密码更新失败!");
-        }
+        userService
+            .updateUserPassword(principal.getName(), oldPassword, newPassword, confirmPassword);
+        return RespBean.success("用户密码更新成功");
     }
 
 }

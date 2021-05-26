@@ -40,15 +40,4 @@ public class MainController {
     public String welcome() {
         return "welcome";
     }
-
-    /**
-     * 用户退出
-     *
-     * @return
-     */
-    @RequestMapping("signout")
-    public String signOut(HttpSession session) {
-        session.removeAttribute("user");
-        return "redirect:index";
-    }
 }

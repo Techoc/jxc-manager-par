@@ -37,17 +37,9 @@ public class UserController {
     @RequestMapping("login")
     @ResponseBody
     public RespBean login(String username, String password, HttpSession session) {
-        try {
-            User user = userService.login(username, password);
-            session.setAttribute("user", user);
-            return RespBean.success("用户登录成功!");
-        } catch (ParamsException e) {
-            e.printStackTrace();
-            return RespBean.error(e.getMsg());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RespBean.error("用户登录失败!");
-        }
+        User user = userService.login(username, password);
+        session.setAttribute("user", user);
+        return RespBean.success("用户登录成功!");
     }
 
     /**

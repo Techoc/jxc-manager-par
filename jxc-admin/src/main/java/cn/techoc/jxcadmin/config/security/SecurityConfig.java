@@ -1,5 +1,6 @@
 package cn.techoc.jxcadmin.config.security;
 
+import cn.techoc.jxcadmin.filters.KaptchaCodeFilter;
 import cn.techoc.jxcadmin.pojo.User;
 import cn.techoc.jxcadmin.service.IUserService;
 
@@ -40,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JxcLogoutSuccessHandler jxcLogoutSuccessHandler;
 
     @Resource
+    private KaptchaCodeFilter kaptchaCodeFilter;
+
+    @Resource
     private IUserService userService;
 
     /**
@@ -68,8 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //禁用csrf
         http.csrf().disable()
-                //TODO 进行验证码校验
-                //.addFilterBefore(, UsernamePasswordAuthenticationFilter.class)
+                //进行验证码校验
+                .addFilterBefore(kaptchaCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 //允许iframe 页面嵌套
                 .headers().frameOptions().disable()
                 .and()

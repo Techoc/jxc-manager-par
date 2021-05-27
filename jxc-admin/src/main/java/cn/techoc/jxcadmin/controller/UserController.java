@@ -4,9 +4,11 @@ package cn.techoc.jxcadmin.controller;
 import cn.techoc.jxcadmin.exceptions.ParamsException;
 import cn.techoc.jxcadmin.model.RespBean;
 import cn.techoc.jxcadmin.pojo.User;
+import cn.techoc.jxcadmin.query.UserQuery;
 import cn.techoc.jxcadmin.service.IUserService;
 
 import java.security.Principal;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
@@ -79,8 +81,85 @@ public class UserController {
     public RespBean updateUserPassword(Principal principal, String oldPassword, String newPassword,
                                        String confirmPassword) {
         userService
-                .updateUserPassword(principal.getName(), oldPassword, newPassword, confirmPassword);
+            .updateUserPassword(principal.getName(), oldPassword, newPassword, confirmPassword);
         return RespBean.success("用户密码更新成功");
     }
 
+    /**
+     * 用户管理主页
+     *
+     * @return
+     */
+    @RequestMapping("index")
+    public String index() {
+        return "user/user";
+    }
+
+
+    /**
+     * 用户列表查询接口
+     *
+     * @param userQuery
+     * @return
+     */
+    @RequestMapping("list")
+    @ResponseBody
+    public Map<String, Object> userList(UserQuery userQuery) {
+        return userService.userList(userQuery);
+    }
+
+    /**
+     * 添加|更新用户信息
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("addOrUpdateUserPage")
+    public String addOrUpdatePage(Integer id, Model model) {
+        if (null != id) {
+            model.addAttribute("user", userService.getById(id));
+        }
+        return "user/add_update";
+    }
+
+    /**
+     * 用户添加接口
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping("save")
+    @ResponseBody
+    public RespBean saveUser(User user) {
+        userService.saveUser(user);
+        return RespBean.success("用户记录添加成功!");
+    }
+
+    /**
+     * 用户记录更新接口
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping("update")
+    @ResponseBody
+    public RespBean update(User user) {
+        userService.updateUser(user);
+        return RespBean.success("用户记录更新成功!");
+    }
+
+
+    /**
+     * 用户记录删除接口
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping("delete")
+    @ResponseBody
+    public RespBean deleteUser(Integer[] ids) {
+        userService.deleteUser(ids);
+        return RespBean.success("用户记录删除成功!");
+    }
 }

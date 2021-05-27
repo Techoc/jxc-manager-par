@@ -1,9 +1,10 @@
 package cn.techoc.jxcadmin.utils;
 
 /**
- * 字符串工具类
+ * <P>字符串工具类</P>
  *
  * @author techoc
+ * @since 2021/5/26
  */
 public class StringUtil {
 
@@ -28,11 +29,7 @@ public class StringUtil {
      * @return
      */
     public static boolean isNotEmpty(String str) {
-        if ((str != null) && !"".equals(str.trim())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (str != null) && !"".equals(str.trim());
     }
 
 
@@ -45,8 +42,8 @@ public class StringUtil {
     public static String formatCode(String code) {
         try {
             int length = code.length();
-            Integer num = Integer.valueOf(code.substring(length - 4, length)) + 1;
-            String codenum = num.toString();
+            int num = Integer.parseInt(code.substring(length - 4, length)) + 1;
+            String codenum = Integer.toString(num);
             int codelength = codenum.length();
             for (int i = 4; i > codelength; i--) {
                 codenum = "0" + codenum;

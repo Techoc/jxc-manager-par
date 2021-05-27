@@ -5,8 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
+ * <p>主控制器</p>
  * @author techoc
- * @Date 2021/5/21
+ * @since 2021/5/21
  */
 @Controller
 public class MainController {

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 全局异常处理类
+ * <P>全局异常处理类</P>
  *
  * @author techoc
- * @Date 2021/5/26
+ * @since 2021/5/26
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {

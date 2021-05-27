@@ -1,9 +1,10 @@
 package cn.techoc.jxcadmin.exceptions;
 
 /**
- * 自定义参数异常
+ * <P>自定义参数异常</P>
  *
  * @author techoc
+ * @since 2021/5/26
  */
 public class ParamsException extends RuntimeException {
     private Integer code = 300;

@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 公共返回对象
+ * <p>公共返回对象</p>
  *
- * @author zhoubin
- * @since 1.0.0
+ * @author techoc
+ * @since 2021/5/26
  */
 @Data
 @NoArgsConstructor

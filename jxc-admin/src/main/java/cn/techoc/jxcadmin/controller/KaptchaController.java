@@ -2,6 +2,7 @@ package cn.techoc.jxcadmin.controller;
 
 import cn.techoc.jxcadmin.model.CaptchaImageModel;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.annotation.Resource;
@@ -9,19 +10,29 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * <p>验证码控制器</p>
+ *
  * @author techoc
- * @Date 2021/5/27
+ * @since 2021/5/27
  */
 @RestController
 public class KaptchaController {
     @Resource
     public DefaultKaptcha defaultKaptcha;
 
+    /**
+     * 生成验证码
+     *
+     * @param session
+     * @param response
+     * @throws IOException
+     */
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     public void kaptcha(HttpSession session, HttpServletResponse response) throws IOException {
         response.setDateHeader("Expires", 0);

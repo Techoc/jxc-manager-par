@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 乐字节  踏实教育 用心服务
+ * <p>
+ * 处理登陆失败的Handler
+ * </p>
  *
- * @author 乐字节--老李
- * @version 1.0
+ * @author techoc
+ * @since 2021/5/26
  */
 @Component
 public class JxcAuthenticationFailedHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -24,9 +26,9 @@ public class JxcAuthenticationFailedHandler extends SimpleUrlAuthenticationFailu
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(
-            RespBean.error("用户名或密码错误")));
+                RespBean.error("用户名或密码错误")));
     }
 }

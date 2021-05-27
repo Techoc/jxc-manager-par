@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 乐字节  踏实教育 用心服务
+ * <p>处理登陆成功的Handler</p>
  *
- * @author 乐字节--老李
- * @version 1.0
+ * @author techoc
+ * @since 2021/5/26
  */
 @Component
 public class JxcAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {

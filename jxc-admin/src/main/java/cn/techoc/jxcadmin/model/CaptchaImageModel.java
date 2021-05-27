@@ -3,7 +3,8 @@ package cn.techoc.jxcadmin.model;
 import java.time.LocalDateTime;
 
 /**
- * @author 13421
+ * @author techoc
+ * @since 2021/5/26
  */
 public class CaptchaImageModel {
 

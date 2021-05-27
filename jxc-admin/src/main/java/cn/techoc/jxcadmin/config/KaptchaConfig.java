@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
- * Kaptcha 配置类
+ * <p>Kaptcha 配置类</p>
  *
  * @author techoc
- * @Date 2021/5/27
+ * @since 2021/5/27
  */
 @Configuration
 @PropertySource(value = {"classpath:kaptcha.properties"})

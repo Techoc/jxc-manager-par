@@ -2,7 +2,9 @@ package cn.techoc.jxcadmin.config.security;
 
 import cn.techoc.jxcadmin.pojo.User;
 import cn.techoc.jxcadmin.service.IUserService;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * Spring Security配置类
  *
  * @author techoc
- * @Date 2021/5/26
+ * @since 2021/5/26
  */
 @SpringBootConfiguration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -49,38 +51,50 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
-            "/css/**",
-            "/error/**",
-            "/images/**",
-            "/js/**",
-            "/lib/**");
+                "/css/**",
+                "/error/**",
+                "/images/**",
+                "/js/**",
+                "/lib/**");
     }
 
+    /**
+     * Spring Security配置设置
+     *
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //禁用csrf
         http.csrf().disable()
-            //TODO 进行验证码校验
-            //.addFilterBefore(, UsernamePasswordAuthenticationFilter.class)
-            //允许iframe 页面嵌套
-            .headers().frameOptions().disable()
-            .and()
-            .formLogin()
-            .usernameParameter("userName")
-            .passwordParameter("password")
-            .loginPage("/index")
-            .loginProcessingUrl("/login")
-            .successHandler(jxcAuthenticationSuccessHandler)
-            .failureHandler(jxcAuthenticationFailedHandler)
-            .and()
-            .logout().logoutUrl("/signout")
-            .deleteCookies("JSESSIONID")
-            .logoutSuccessHandler(jxcLogoutSuccessHandler)
-            .and()
-            .authorizeRequests()
-            .antMatchers("/index", "/login", "/image")
-            .permitAll()
-            .anyRequest().authenticated();
+                //TODO 进行验证码校验
+                //.addFilterBefore(, UsernamePasswordAuthenticationFilter.class)
+                //允许iframe 页面嵌套
+                .headers().frameOptions().disable()
+                .and()
+                .formLogin()
+                //用户名参数 密码参数
+                .usernameParameter("userName")
+                .passwordParameter("password")
+                //登陆页面
+                .loginPage("/index")
+                //登陆处理路由
+                .loginProcessingUrl("/login")
+                .successHandler(jxcAuthenticationSuccessHandler)
+                .failureHandler(jxcAuthenticationFailedHandler)
+                .and()
+                //退出系统路由
+                .logout().logoutUrl("/signout")
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessHandler(jxcLogoutSuccessHandler)
+                .and()
+                .authorizeRequests()
+                //匹配放行路由
+                .antMatchers("/index", "/login", "/image")
+                .permitAll()
+                //除放行请求，其余请求一律拦截
+                .anyRequest().authenticated();
     }
 
     @Bean
@@ -89,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username)
-                throws UsernameNotFoundException {
+                    throws UsernameNotFoundException {
                 User userDetails = userService.findUserByUserName(username);
                 return userDetails;
             }

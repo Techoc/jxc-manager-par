@@ -5,9 +5,11 @@ import cn.techoc.jxcadmin.exceptions.ParamsException;
 import cn.techoc.jxcadmin.model.RespBean;
 import cn.techoc.jxcadmin.pojo.User;
 import cn.techoc.jxcadmin.service.IUserService;
+
 import java.security.Principal;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -49,16 +51,8 @@ public class UserController {
     @RequestMapping("updateUserInfo")
     @ResponseBody
     public RespBean updateUserInfo(User user) {
-        try {
-            userService.updateUserInfo(user);
-            return RespBean.success("用户信息更新成功");
-        } catch (ParamsException e) {
-            e.printStackTrace();
-            return RespBean.error(e.getMsg());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RespBean.error("用户信息更新失败!");
-        }
+        userService.updateUserInfo(user);
+        return RespBean.success("用户信息更新成功");
     }
 
     /**
@@ -85,7 +79,7 @@ public class UserController {
     public RespBean updateUserPassword(Principal principal, String oldPassword, String newPassword,
                                        String confirmPassword) {
         userService
-            .updateUserPassword(principal.getName(), oldPassword, newPassword, confirmPassword);
+                .updateUserPassword(principal.getName(), oldPassword, newPassword, confirmPassword);
         return RespBean.success("用户密码更新成功");
     }
 

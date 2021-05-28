@@ -5,6 +5,7 @@ import cn.techoc.jxcadmin.mapper.UserMapper;
 import cn.techoc.jxcadmin.query.UserQuery;
 import cn.techoc.jxcadmin.service.IUserService;
 import cn.techoc.jxcadmin.utils.AssertUtil;
+import cn.techoc.jxcadmin.utils.PageResultUtil;
 import cn.techoc.jxcadmin.utils.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -76,12 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             queryWrapper.like("user_name", userQuery.getUsername());
         }
         page = this.baseMapper.selectPage(page, queryWrapper);
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", 0);
-        map.put("msg", "");
-        map.put("data", page.getRecords());
-        map.put("count", page.getTotal());
-        return map;
+        return PageResultUtil.getResult(page.getTotal(), page.getRecords());
     }
 
     @Override

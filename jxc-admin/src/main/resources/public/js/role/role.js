@@ -1,5 +1,5 @@
 layui.use(['table','layer'],function(){
-       var layer = parent.layer === undefined ? layui.layer : top.layer,
+    var layer = parent.layer === undefined ? layui.layer : top.layer,
         $ = layui.jquery,
         table = layui.table;
     //角色列表展示
@@ -60,12 +60,12 @@ layui.use(['table','layer'],function(){
         }else if(layEvent === "del") {
             layer.confirm('确定删除当前角色？', {icon: 3, title: "角色管理"}, function (index) {
                 $.post(ctx+"/role/delete",{id:obj.data.id},function (data) {
-                        if(data.code==200){
-                            layer.msg("操作成功！");
-                            tableIns.reload();
-                        }else{
-                            layer.msg(data.message, {icon: 5});
-                        }
+                    if(data.code==200){
+                        layer.msg("操作成功！");
+                        tableIns.reload();
+                    }else{
+                        layer.msg(data.message, {icon: 5});
+                    }
                 });
             })
         }

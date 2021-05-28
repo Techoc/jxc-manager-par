@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @throws Exception
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(
             "/css/**",
             "/error/**",
@@ -131,10 +131,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return username -> {
-            return userService.findUserByUserName(username);
-        };
+    public UserDetailsService userDetailsServiceBean() {
+        return username -> userService.findUserByUserName(username);
     }
 
     @Bean

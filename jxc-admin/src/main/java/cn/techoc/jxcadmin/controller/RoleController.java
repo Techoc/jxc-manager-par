@@ -5,6 +5,7 @@ import cn.techoc.jxcadmin.query.RoleQuery;
 import cn.techoc.jxcadmin.service.IRoleService;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,23 @@ public class RoleController {
     @RequestMapping("list")
     @ResponseBody
     public Map<String, Object> roleList(RoleQuery roleQuery) {
-        System.out.println("+++++++++++++++++++++++++++++");
         return roleService.roleList(roleQuery);
     }
+
+    /**
+     * 添加|更新角色信息
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("addOrUpdateRolePage")
+    public String addOrUpdatePage(Integer id, Model model) {
+        if (null != id) {
+            model.addAttribute("role", roleService.getById(id));
+        }
+        return "role/add_update";
+    }
+
+
 }

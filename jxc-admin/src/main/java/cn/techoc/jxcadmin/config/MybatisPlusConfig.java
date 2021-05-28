@@ -8,12 +8,18 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * mybatisPlus配置类
+ *
  * @author techoc
  * @since 2021/5/27
  */
 @SpringBootConfiguration
 public class MybatisPlusConfig {
 
+    /**
+     * 开启数据库分页查询
+     *
+     * @return
+     */
     @Bean
     public MybatisPlusInterceptor paginationInterceptor() {
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();

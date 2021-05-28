@@ -4,6 +4,7 @@ package cn.techoc.jxcadmin.filters;
 import cn.techoc.jxcadmin.model.CaptchaImageModel;
 import cn.techoc.jxcadmin.model.RespBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.Objects;
 import javax.servlet.FilterChain;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
@@ -36,31 +38,37 @@ public class KaptchaCodeFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         //只有在登录请求时才有验证码过滤操作
         if (StringUtils.equals("/login", request.getRequestURI()) &&
-            StringUtils.equalsIgnoreCase(request.getMethod(), "post")) {
+                StringUtils.equalsIgnoreCase(request.getMethod(), "post")) {
             //校验登录验证码是否正确
             try {
                 this.validate(new ServletWebRequest(request));
             } catch (AuthenticationException e) {
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write(objectMapper.writeValueAsString(
-                    RespBean.error(e.getMessage())));
+                        RespBean.error(e.getMessage())));
                 return;
             }
         }
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 校验验证码
+     *
+     * @param servletWebRequest
+     * @throws ServletRequestBindingException
+     */
     private void validate(ServletWebRequest servletWebRequest)
-        throws ServletRequestBindingException {
+            throws ServletRequestBindingException {
         HttpSession session = servletWebRequest.getRequest().getSession();
         // 获取请求中的参数值
         String codeInRequest =
-            ServletRequestUtils.getStringParameter(servletWebRequest.getRequest(), "captchaCode");
+                ServletRequestUtils.getStringParameter(servletWebRequest.getRequest(), "captchaCode");
         if (StringUtils.isEmpty(codeInRequest)) {
             throw new SessionAuthenticationException("验证码不能为空!");
         }
         CaptchaImageModel codeInSession =
-            (CaptchaImageModel) session.getAttribute("captcha_key");
+                (CaptchaImageModel) session.getAttribute("captcha_key");
         if (Objects.isNull(codeInSession)) {
             throw new SessionAuthenticationException("验证码不存在!");
         }

@@ -29,6 +29,6 @@ public class JxcAuthenticationFailedHandler extends SimpleUrlAuthenticationFailu
             throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(
-                RespBean.error("用户名或密码错误")));
+                RespBean.error("用户名或密码错误!")));
     }
 }

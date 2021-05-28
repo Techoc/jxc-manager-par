@@ -3,6 +3,7 @@ package cn.techoc.jxcadmin.service;
 import cn.techoc.jxcadmin.pojo.User;
 import cn.techoc.jxcadmin.query.UserQuery;
 import com.baomidou.mybatisplus.extension.service.IService;
+
 import java.util.Map;
 
 /**
@@ -41,11 +42,32 @@ public interface IUserService extends IService<User> {
     void updateUserPassword(String userName, String oldPassword, String newPassword,
                             String confirmPassword);
 
+    /**
+     * 展示用户列表
+     *
+     * @param userQuery
+     * @return
+     */
     Map<String, Object> userList(UserQuery userQuery);
 
+    /**
+     * 添加用户信息
+     *
+     * @param user
+     */
     void saveUser(User user);
 
+    /**
+     * 修改用户信息
+     *
+     * @param user
+     */
     void updateUser(User user);
 
+    /**
+     * 删除用户信息
+     *
+     * @param ids
+     */
     void deleteUser(Integer[] ids);
 }

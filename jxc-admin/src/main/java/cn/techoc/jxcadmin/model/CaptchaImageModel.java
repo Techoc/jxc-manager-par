@@ -13,7 +13,7 @@ public class CaptchaImageModel {
     private final LocalDateTime expireTime;
 
 
-    public CaptchaImageModel(String code, int expireAfterSeconds){
+    public CaptchaImageModel(String code, int expireAfterSeconds) {
         this.code = code;
         this.expireTime = LocalDateTime.now().plusSeconds(expireAfterSeconds);
     }
@@ -25,7 +25,7 @@ public class CaptchaImageModel {
     /**
      * 验证码是否失效
      */
-    public boolean isExpired(){
-        return  LocalDateTime.now().isAfter(expireTime);
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expireTime);
     }
 }

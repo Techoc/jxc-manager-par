@@ -144,7 +144,7 @@ public class UserController {
      */
     @RequestMapping("update")
     @ResponseBody
-    public RespBean update(User user) {
+    public RespBean updateUser(User user) {
         userService.updateUser(user);
         return RespBean.success("用户记录更新成功!");
     }

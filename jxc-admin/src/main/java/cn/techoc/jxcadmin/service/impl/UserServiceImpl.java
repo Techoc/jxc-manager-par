@@ -2,7 +2,9 @@ package cn.techoc.jxcadmin.service.impl;
 
 import cn.techoc.jxcadmin.pojo.User;
 import cn.techoc.jxcadmin.mapper.UserMapper;
+import cn.techoc.jxcadmin.pojo.UserRole;
 import cn.techoc.jxcadmin.query.UserQuery;
+import cn.techoc.jxcadmin.service.IUserRoleService;
 import cn.techoc.jxcadmin.service.IUserService;
 import cn.techoc.jxcadmin.utils.AssertUtil;
 import cn.techoc.jxcadmin.utils.PageResultUtil;
@@ -12,6 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Resource
     private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private IUserRoleService userRoleService;
 
     @Override
     public User findUserByUserName(String username) {
@@ -87,8 +93,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         AssertUtil.isTrue(null != this.findUserByUserName(user.getUsername()), "用户名已存在!");
         user.setPassword(passwordEncoder.encode("123456"));
         user.setIsDel(0);
-        //TODO 添加权限信息
         AssertUtil.isTrue(!(this.save(user)), "用户记录添加失败!");
+        // 重新查询用户记录
+        User temp = this.findUserByUserName(user.getUsername());
+        /**
+         * 给用户分配角色
+         */
+        relationUserRole(temp.getId(), user.getRoleIds());
+    }
+
+    private void relationUserRole(Integer userId, String roleIds) {
+        int count = userRoleService.count(new QueryWrapper<UserRole>().eq("user_id", userId));
+        if (count > 0) {
+            AssertUtil.isTrue(
+                !(userRoleService.remove(new QueryWrapper<UserRole>().eq("user_id", userId))),
+                "用户角色分配失败!");
+        }
+        if (StringUtils.isNotBlank(roleIds)) {
+            List<UserRole> userRoles = new ArrayList<>();
+            for (String s : roleIds.split(",")) {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(userId);
+                userRole.setRoleId(Integer.parseInt(s));
+                userRoles.add(userRole);
+            }
+            AssertUtil.isTrue(!(userRoleService.saveBatch(userRoles)), "用户角色分配失败!");
+        }
     }
 
     @Override
@@ -97,7 +127,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         AssertUtil.isTrue(StringUtils.isBlank(user.getUsername()), "用户名不能为空!");
         User temp = this.findUserByUserName(user.getUsername());
         AssertUtil.isTrue(null != temp && !(temp.getId().equals(user.getId())), "用户名已存在!");
-        //TODO 更新权限
+        //给用户分配角色
+        assert temp != null;
+        this.relationUserRole(temp.getId(), user.getRoleIds());
         AssertUtil.isTrue(!(this.updateById(user)), "用户记录更新失败!");
     }
 
@@ -105,6 +137,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void deleteUser(Integer[] ids) {
         AssertUtil.isTrue(null == ids || ids.length == 0, "请选择待删除的记录id!");
+        assert ids != null;
+        int count =
+            userRoleService.count(new QueryWrapper<UserRole>().in("user_id", Arrays.asList(ids)));
+        if (count > 0) {
+            AssertUtil.isTrue(!(userRoleService
+                    .remove(new QueryWrapper<UserRole>().in("user_id", Arrays.asList(ids)))),
+                "用户记录删除失败!");
+        }
         List<User> users = new ArrayList<>();
         for (Integer id : ids) {
             User temp = this.getById(id);

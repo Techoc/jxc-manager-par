@@ -60,4 +60,11 @@ public interface IRoleService extends IService<Role> {
      * @return
      */
     List<Map<String, Object>> queryAllRoles(Integer userId);
+
+    /**
+     * 角色授权接口
+     * @param roleId
+     * @param mids
+     */
+    void addGrant(Integer roleId, Integer[] mids);
 }

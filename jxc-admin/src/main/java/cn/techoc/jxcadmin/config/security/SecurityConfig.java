@@ -1,20 +1,26 @@
 package cn.techoc.jxcadmin.config.security;
 
+import cn.techoc.jxcadmin.config.ClassPathTldsLoader;
 import cn.techoc.jxcadmin.filters.KaptchaCodeFilter;
 import cn.techoc.jxcadmin.pojo.User;
+import cn.techoc.jxcadmin.service.IRbacService;
 import cn.techoc.jxcadmin.service.IUserService;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,6 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     private IUserService userService;
+
+    @Resource
+    private IRbacService rbacService;
 
     /**
      * 放行静态资源
@@ -132,7 +141,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsServiceBean() {
-        return username -> userService.findUserByUserName(username);
+        /**
+         * 1.查询用户所对应的角色
+         * 2.根据用户角色查询拥有的权限记录
+         *
+         */
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username)
+                throws UsernameNotFoundException {
+                User userDetails = userService.findUserByUserName(username);
+                List<String> roleNames = rbacService.findRolesByUserName(username);
+                List<String> authorities = rbacService.findAuthoritiesByRoleName(roleNames);
+                roleNames =
+                    roleNames.stream().map(role -> "ROLE_" + role).collect(Collectors.toList());
+                authorities.addAll(roleNames);
+                userDetails.setAuthorities(
+                    AuthorityUtils
+                        .commaSeparatedStringToAuthorityList(String.join(",", authorities)));
+                return userDetails;
+            }
+        };
     }
 
     @Bean
@@ -143,5 +172,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(encoder());
+    }
+
+    /**
+     * 加载 ClassPathTldsLoader
+     *
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(ClassPathTldsLoader.class)
+    public ClassPathTldsLoader classPathTldsLoader() {
+        return new ClassPathTldsLoader();
     }
 }

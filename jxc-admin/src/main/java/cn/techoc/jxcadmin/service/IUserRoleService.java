@@ -2,6 +2,7 @@ package cn.techoc.jxcadmin.service;
 
 import cn.techoc.jxcadmin.pojo.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserRoleService extends IService<UserRole> {
 
+    List<String> findRolesByUserName(String userName);
 }

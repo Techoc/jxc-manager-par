@@ -2,7 +2,9 @@ package cn.techoc.jxcadmin.service.impl;
 
 import cn.techoc.jxcadmin.pojo.Role;
 import cn.techoc.jxcadmin.mapper.RoleMapper;
+import cn.techoc.jxcadmin.pojo.RoleMenu;
 import cn.techoc.jxcadmin.query.RoleQuery;
+import cn.techoc.jxcadmin.service.IRoleMenuService;
 import cn.techoc.jxcadmin.service.IRoleService;
 import cn.techoc.jxcadmin.utils.AssertUtil;
 import cn.techoc.jxcadmin.utils.PageResultUtil;
@@ -10,8 +12,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sun.istack.internal.NotNull;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
+    @Resource
+    private IRoleMenuService roleMenuService;
 
     @Override
     public Role findRoleByRoleName(String roleName) {
@@ -65,6 +73,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void deleteRole(Integer id) {
         AssertUtil.isTrue(null == id, "请选择待删除的记录!");
         Role role = this.getById(id);
@@ -77,5 +86,40 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public List<Map<String, Object>> queryAllRoles(Integer userId) {
         return this.baseMapper.queryAllRoles(userId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void addGrant(Integer roleId, Integer[] mids) {
+        /**
+         * 1.参数校验
+         * roleId非空必须存在
+         * 2.授权
+         * 2.1第一次授权
+         * 直接批量添加即可
+         * 2.2第2+次授权
+         * 如果存在原始权限此时删除原始权限然后添加新的权限记录
+         * 如果不存在直接批量添加即可
+         * 合并2.12.2原始权限不管是否存在先执行权限记录查询如果存在直接删除（根据角色id)
+         * 执行批量添加（数组非空数量>0)
+         */
+        Role role = this.getById(roleId);
+        AssertUtil.isTrue(null == role, "待授权角色不存在!");
+        int count = roleMenuService.count(new QueryWrapper<RoleMenu>().eq("role_id", roleId));
+        if (count > 0) {
+            AssertUtil.isTrue(
+                !(roleMenuService.remove(new QueryWrapper<RoleMenu>().eq("role_id", roleId))),
+                "角色授权失败!");
+        }
+        if (null != mids && mids.length > 0) {
+            List<RoleMenu> roleMenus = new ArrayList<>();
+            for (Integer mid : mids) {
+                RoleMenu roleMenu = new RoleMenu();
+                roleMenu.setRoleId(roleId);
+                roleMenu.setMenuId(mid);
+                roleMenus.add(roleMenu);
+            }
+            AssertUtil.isTrue(!(roleMenuService.saveBatch(roleMenus)), "角色授权失败!");
+        }
     }
 }

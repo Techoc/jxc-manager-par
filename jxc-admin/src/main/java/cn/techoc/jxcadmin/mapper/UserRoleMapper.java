@@ -2,6 +2,7 @@ package cn.techoc.jxcadmin.mapper;
 
 import cn.techoc.jxcadmin.pojo.UserRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
+    List<String> findRolesByUserName(String userName);
 }

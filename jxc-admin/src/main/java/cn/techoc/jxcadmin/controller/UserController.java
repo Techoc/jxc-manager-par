@@ -134,6 +134,7 @@ public class UserController {
      */
     @RequestMapping("save")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('101004')")
     public RespBean saveUser(User user) {
         userService.saveUser(user);
         return RespBean.success("用户记录添加成功!");
@@ -147,6 +148,7 @@ public class UserController {
      */
     @RequestMapping("update")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('101005')")
     public RespBean updateUser(User user) {
         userService.updateUser(user);
         return RespBean.success("用户记录更新成功!");
@@ -161,6 +163,7 @@ public class UserController {
      */
     @RequestMapping("delete")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('101006')")
     public RespBean deleteUser(Integer[] ids) {
         userService.deleteUser(ids);
         return RespBean.success("用户记录删除成功!");

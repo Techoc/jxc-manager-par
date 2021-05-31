@@ -9,6 +9,7 @@ import cn.techoc.jxcadmin.service.IRoleService;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -47,6 +48,7 @@ public class RoleController {
      */
     @RequestMapping("list")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('102001')")
     public Map<String, Object> roleList(RoleQuery roleQuery) {
         return roleService.roleList(roleQuery);
     }
@@ -74,6 +76,7 @@ public class RoleController {
      */
     @RequestMapping("save")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('102002')")
     public RespBean saveRole(Role role) {
         roleService.saveRole(role);
         return RespBean.success("角色记录添加成功!");
@@ -87,6 +90,7 @@ public class RoleController {
      */
     @RequestMapping("update")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('102003')")
     public RespBean updateRole(Role role) {
         roleService.updateRole(role);
         return RespBean.success("角色记录更新成功!");
@@ -100,6 +104,7 @@ public class RoleController {
      */
     @RequestMapping("delete")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('102004')")
     public RespBean deleteRole(Integer id) {
         roleService.deleteRole(id);
         return RespBean.success("角色记录删除成功!");
@@ -139,6 +144,7 @@ public class RoleController {
      */
     @RequestMapping("addGrant")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('102005')")
     public RespBean addGrant(Integer roleId, Integer[] mids) {
         roleService.addGrant(roleId, mids);
         return RespBean.success("角色记录授权成功!");

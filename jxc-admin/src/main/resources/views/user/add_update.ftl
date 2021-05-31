@@ -39,14 +39,15 @@
                            name="remarks" value="${(user.remarks)!}" id="remarks" placeholder="请输入备注信息">
                 </div>
             </div>
-
-            <div class="magb15 layui-col-md4 layui-col-xs12">
-                <label class="layui-form-label">角色</label>
-                <div class="layui-input-block">
-                    <select name="roleIds" xm-select="selectId">
-                    </select>
+            <@security.authorize access="hasAnyAuthority('102005')">
+                <div class="magb15 layui-col-md4 layui-col-xs12">
+                    <label class="layui-form-label">角色</label>
+                    <div class="layui-input-block">
+                        <select name="roleIds" xm-select="selectId">
+                        </select>
+                    </div>
                 </div>
-            </div>
+            </@security.authorize>
 
 
             <br/>
